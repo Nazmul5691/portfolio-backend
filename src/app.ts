@@ -1,6 +1,9 @@
 import express, { type Request, type Response } from 'express';
 import cors from "cors";
 import compression from "compression";
+import { router } from './routes/index.js';
+import { globalErrorHandler } from './middlewares/globalErrorHandlers.js';
+import notFound from './middlewares/notFound.js';
 
 
 
@@ -20,6 +23,8 @@ app.use(
 );
 
 
+app.use("/api/v1", router);
+
 
 app.get("/", (req: Request, res: Response) =>{
     res.status(200).json({
@@ -28,6 +33,9 @@ app.get("/", (req: Request, res: Response) =>{
 });
 
 
+
+app.use(globalErrorHandler);
+app.use(notFound);
 
 
 export default app;
