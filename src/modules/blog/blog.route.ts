@@ -14,6 +14,7 @@ router.post("/create-blog", checkAuth(...Object.values(Role)),validateRequest(cr
 router.get("/", BlogControllers.getAllBlogs);
 router.get("/:id", BlogControllers.getBlogById);
 router.delete("/:id", BlogControllers.deleteBlog);
+router.patch("/:id", BlogControllers.updateBlog);
 
 
 

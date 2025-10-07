@@ -72,6 +72,47 @@ const getAllBlogs = async (query: Record<string, string>) => {
 };
 
 
+const updateBlog = async (id: number, payload: Partial<Blog>) => {
+
+    const existingBlog = await prisma.blog.findUnique({ where: { id } });
+
+    if (!existingBlog) {
+        throw new Error("Blog not found")
+    };
+    
+
+    if (payload.title) {
+        const baseSlug = payload.title.toLowerCase().trim().split(" ").join("-");
+        let slug = baseSlug;
+        let counter = 1;
+
+        // ensure unique slug
+        while (await prisma.blog.findUnique({ where: { slug } })) {
+            slug = `${baseSlug}-${counter++}`;
+        }
+
+        payload.slug = slug;
+    }
+
+
+
+    const updatedBlog = await prisma.blog.update({
+        where: { id },
+        data: payload,
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            },
+        },
+    });
+
+    return updatedBlog;
+}
+
 
 const getBlogById = async (id: number) => {
     const result = await prisma.blog.findUnique({
@@ -104,8 +145,8 @@ const getBlogById = async (id: number) => {
 
 
 
-const deleteBlog = async(id: number) =>{
-    const result =await prisma.blog.delete({
+const deleteBlog = async (id: number) => {
+    const result = await prisma.blog.delete({
         where: {
             id
         }
@@ -121,6 +162,7 @@ const deleteBlog = async(id: number) =>{
 export const BlogServices = {
     createBlog,
     getAllBlogs,
+    updateBlog,
     getBlogById,
     deleteBlog
 }

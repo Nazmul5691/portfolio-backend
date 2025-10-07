@@ -3,6 +3,8 @@ import { BlogServices } from "./blog.service.js"
 import { sendResponse } from "../../utils/sendResponse.js";
 import { catchAsync } from "../../utils/catchAsync.js";
 
+
+
 const createBlog = catchAsync(async (req: Request, res: Response) => {
 
     if (!req.user?.id) {
@@ -48,6 +50,23 @@ const getAllBlogs = catchAsync(async (req: Request, res: Response) => {
 
 
 
+const updateBlog = catchAsync(async (req: Request, res: Response) => {
+
+    const id = Number(req.params.id);
+    const payload = req.body;
+
+    const result = await BlogServices.updateBlog(id, payload);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Blog updated successfully',
+        data: result, 
+    });
+})
+
+
+
 const getBlogById = catchAsync(async (req: Request, res: Response) => {
 
     const id = Number(req.params.id);
@@ -74,13 +93,14 @@ const deleteBlog = catchAsync(async (req: Request, res: Response) => {
         data: null
     })
 
-})
+});
 
 
 
 export const BlogControllers = {
     createBlog,
     getAllBlogs,
+    updateBlog,
     getBlogById,
     deleteBlog
 }
