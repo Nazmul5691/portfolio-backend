@@ -104,8 +104,23 @@ const getBlogById = async (id: number) => {
 
 
 
+const deleteBlog = async(id: number) =>{
+    const result =await prisma.blog.delete({
+        where: {
+            id
+        }
+    })
+
+    return {
+        data: null
+    }
+}
+
+
+
 export const BlogServices = {
     createBlog,
     getAllBlogs,
-    getBlogById
+    getBlogById,
+    deleteBlog
 }

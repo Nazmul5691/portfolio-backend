@@ -32,8 +32,8 @@ const createBlog = catchAsync(async (req: Request, res: Response) => {
 
 
 
-const getAllBlogs = catchAsync(async(req: Request, res: Response) =>{
-    
+const getAllBlogs = catchAsync(async (req: Request, res: Response) => {
+
     const query = req.query;
     const result = await BlogServices.getAllBlogs(query as Record<string, string>);
 
@@ -48,8 +48,8 @@ const getAllBlogs = catchAsync(async(req: Request, res: Response) =>{
 
 
 
-const getBlogById = catchAsync(async(req: Request, res: Response) =>{
-    
+const getBlogById = catchAsync(async (req: Request, res: Response) => {
+
     const id = Number(req.params.id);
     const result = await BlogServices.getBlogById(id);
 
@@ -59,6 +59,21 @@ const getBlogById = catchAsync(async(req: Request, res: Response) =>{
         message: "Blog retrieved successfully",
         data: result.data
     })
+});
+
+
+const deleteBlog = catchAsync(async (req: Request, res: Response) => {
+
+    const id = Number(req.params.id);
+    const result = await BlogServices.deleteBlog(id);
+
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: "Blog deleted successfully",
+        data: null
+    })
+
 })
 
 
@@ -66,5 +81,6 @@ const getBlogById = catchAsync(async(req: Request, res: Response) =>{
 export const BlogControllers = {
     createBlog,
     getAllBlogs,
-    getBlogById
+    getBlogById,
+    deleteBlog
 }
