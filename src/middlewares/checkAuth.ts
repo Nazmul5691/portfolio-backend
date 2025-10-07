@@ -51,6 +51,9 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
         req.user = verifiedToken;
         next()
 
+        // console.log("accessToken raw:", accessToken);
+        // console.log("verifiedToken:", verifiedToken);
+
     } catch (error) {
         next(error)
     };

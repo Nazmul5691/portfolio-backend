@@ -56,7 +56,7 @@ const createUser = async (payload: Partial<User>) => {
 const getUserById = async(id: number) =>{
     const result = await prisma.user.findUnique({
         where:{
-            id
+            id: id
         },
         select: {
             id: true,
@@ -81,9 +81,37 @@ const getUserById = async(id: number) =>{
 
 
 
+const getMe = async (id: number) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: id
+        },
+        select:{
+            // id: true,
+            name: true,
+            email: true,
+            role: true,
+            picture: true,
+            createdAt: true,
+            updatedAt: true,
+            blogs: true,
+            projects: true,
+            skills: true,
+            experiences: true
+        }
+    });
+
+    return {
+        data: user
+    }
+};
+
+
+
 
 
 export const UserServices = {
     createUser,
-    getUserById
+    getUserById,
+    getMe
 };

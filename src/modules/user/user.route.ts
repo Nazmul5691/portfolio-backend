@@ -12,6 +12,7 @@ const router = Router();
 
 // /api/v1/user
 router.post("/register", validateRequest(createUserZodSchema), UserControllers.createUser);
+router.get("/me", checkAuth(...Object.values(Role)), UserControllers.getMe);
 router.get("/:id", checkAuth(Role.Admin), UserControllers.getUserById);
 
 

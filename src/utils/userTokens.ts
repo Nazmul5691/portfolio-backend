@@ -5,7 +5,7 @@ import { envVars } from "../config/env.js";
 
 export const createUserTokens = (user: Partial<User>) => {
     const jwtPayload = {
-        userId: user.id,
+        id: user.id,
         email: user.email,
         role: user.role
     }
