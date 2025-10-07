@@ -1,8 +1,9 @@
 import type { Request, Response } from "express"
 import { BlogServices } from "./blog.service.js"
 import { sendResponse } from "../../utils/sendResponse.js";
+import { catchAsync } from "../../utils/catchAsync.js";
 
-const createBlog = async (req: Request, res: Response) => {
+const createBlog = catchAsync(async (req: Request, res: Response) => {
 
     if (!req.user?.id) {
         return sendResponse(res, {
@@ -27,10 +28,27 @@ const createBlog = async (req: Request, res: Response) => {
         message: "Blog created successfully",
         data: result
     })
-}
+})
+
+
+
+const getAllBlogs = catchAsync(async(req: Request, res: Response) =>{
+    
+    const query = req.query;
+    const result = await BlogServices.getAllBlogs(query as Record<string, string>);
+
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: "All Blogs retrieved successfully",
+        data: result.data,
+        meta: result.meta
+    })
+})
 
 
 
 export const BlogControllers = {
-    createBlog
+    createBlog,
+    getAllBlogs
 }

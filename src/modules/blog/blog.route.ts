@@ -11,5 +11,8 @@ const router = Router();
 
 router.post("/create-blog", checkAuth(...Object.values(Role)),validateRequest(createBlogZodSchema), BlogControllers.createBlog);
 
+router.get("/", BlogControllers.getAllBlogs)
+
+
 
 export const BlogRoutes = router;

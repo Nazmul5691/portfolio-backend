@@ -1,5 +1,10 @@
 import type { Blog, Prisma } from "@prisma/client"
 import { prisma } from "../../config/db.js"
+import { QueryBuilder } from "../../utils/queryBuilder.js";
+import { blogSearchableFields } from "./blog.constant.js";
+
+
+
 
 const createBlog = async (payload: Prisma.BlogCreateInput): Promise<Blog> => {
 
@@ -41,8 +46,35 @@ const createBlog = async (payload: Prisma.BlogCreateInput): Promise<Blog> => {
 }
 
 
+const getAllBlogs = async (query: Record<string, string>) => {
+
+    const queryBuilder = new QueryBuilder(prisma.blog, query)
+
+    const blogsQuery = queryBuilder
+        .filter()
+        .search(blogSearchableFields)
+        .sort()
+        .fields()
+        .paginate()
+
+
+    // const meta = await queryBuilder.getMeta()
+
+    const [data, meta] = await Promise.all([
+        blogsQuery.build(),
+        queryBuilder.getMeta()
+    ])
+
+    return {
+        data,
+        meta
+    }
+};
+
+
 
 
 export const BlogServices = {
-    createBlog
+    createBlog,
+    getAllBlogs
 }
