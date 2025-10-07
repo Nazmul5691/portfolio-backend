@@ -72,14 +72,18 @@ const getAllBlogs = async (query: Record<string, string>) => {
 };
 
 
-const updateBlog = async (id: number, payload: Partial<Blog>) => {
+const updateBlog = async (id: number, payload: Partial<Blog>, userId: number) => {
 
     const existingBlog = await prisma.blog.findUnique({ where: { id } });
 
     if (!existingBlog) {
         throw new Error("Blog not found")
     };
-    
+
+    if (existingBlog.authorId !== userId) {
+        throw new Error("Unauthorized: You can only update your own blog");
+    }
+
 
     if (payload.title) {
         const baseSlug = payload.title.toLowerCase().trim().split(" ").join("-");
@@ -145,7 +149,20 @@ const getBlogById = async (id: number) => {
 
 
 
-const deleteBlog = async (id: number) => {
+const deleteBlog = async (id: number, userId: number) => {
+
+
+    const existingBlog = await prisma.blog.findUnique({ where: { id } });
+
+    if (!existingBlog) {
+        throw new Error("Blog not found");
+    }
+
+    if (existingBlog.authorId !== userId) {
+        throw new Error("Unauthorized: You can only delete your own blog");
+    }
+
+
     const result = await prisma.blog.delete({
         where: {
             id

@@ -13,8 +13,8 @@ router.post("/create-blog", checkAuth(...Object.values(Role)),validateRequest(cr
 
 router.get("/", BlogControllers.getAllBlogs);
 router.get("/:id", BlogControllers.getBlogById);
-router.delete("/:id", BlogControllers.deleteBlog);
-router.patch("/:id", BlogControllers.updateBlog);
+router.delete("/:id", checkAuth(...Object.values(Role)), BlogControllers.deleteBlog);
+router.patch("/:id",checkAuth(...Object.values(Role)), BlogControllers.updateBlog);
 
 
 
