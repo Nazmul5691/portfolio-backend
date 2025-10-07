@@ -73,8 +73,39 @@ const getAllBlogs = async (query: Record<string, string>) => {
 
 
 
+const getBlogById = async (id: number) => {
+    const result = await prisma.blog.findUnique({
+        where: {
+            id
+        },
+        select: {
+            id: true,
+            title: true,
+            content: true,
+            slug: true,
+            thumbnailUrl: true,
+            createdAt: true,
+            updatedAt: true,
+            author: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    picture: true,
+                },
+            },
+        }
+    })
+
+    return {
+        data: result
+    }
+};
+
+
 
 export const BlogServices = {
     createBlog,
-    getAllBlogs
+    getAllBlogs,
+    getBlogById
 }
