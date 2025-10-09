@@ -1,5 +1,7 @@
 import type { Prisma, Project } from "@prisma/client"
 import { prisma } from "../../config/db.js"
+import { QueryBuilder } from "../../utils/queryBuilder.js";
+import { projectSearchableFields } from "./project.constant.js";
 
 
 
@@ -51,9 +53,33 @@ const createProject = async (payload: Prisma.ProjectCreateInput): Promise<Projec
 
 
 
+const getAllProjects = async (query: Record<string, string>) => {
 
+    const queryBuilder = new QueryBuilder(prisma.project, query)
+
+    const projectQuery = queryBuilder
+        .filter()
+        .search(projectSearchableFields)
+        .sort()
+        .fields()
+        .paginate()
+
+
+    // const meta = await queryBuilder.getMeta()
+
+    const [data, meta] = await Promise.all([
+        projectQuery.build(),
+        queryBuilder.getMeta()
+    ])
+
+    return {
+        data,
+        meta
+    }
+};
 
 
 export const ProjectServices = {
-    createProject
+    createProject,
+    getAllProjects
 }

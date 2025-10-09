@@ -8,7 +8,7 @@ import { sendResponse } from "../../utils/sendResponse.js";
 
 // credentials Login
 const createProject = catchAsync(async (req: Request, res: Response) => {
-    
+
 
     if (!req.user?.id) {
         return sendResponse(res, {
@@ -36,11 +36,27 @@ const createProject = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+const getAllProjects = catchAsync(async (req: Request, res: Response) => {
+    const query = req.query;
+    const result = await ProjectServices.getAllProjects(query as Record<string, string>);
+
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: "All projects retrieved successfully",
+        data: result.data,
+        meta: result.meta
+    })
+
+})
+
+
 
 
 
 
 
 export const ProjectControllers = {
-    createProject
+    createProject, 
+    getAllProjects
 }

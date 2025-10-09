@@ -10,7 +10,7 @@ const router = Router();
 
 
 router.post("/create-project", checkAuth(...Object.values(Role)), ProjectControllers.createProject);
-
+router.get("/", ProjectControllers.getAllProjects )
 
 
 
